@@ -1,1 +1,49 @@
 
+import numpy as np
+import pandas as pd
+anime = pd.read_csv("anime.csv")
+
+1). Make a new column for episode count
+
+def extract_episodes(title):
+    check = False
+    data = ""
+    for i in title:
+        if i == ")":
+            check = False
+            return data
+        if check == True:
+            data = data + i
+        if i == "(":
+            check = True
+
+anime["Episodes"] = anime["Title"].apply(extract_episodes)
+anime["Episodes"] = anime["Episodes"].str.replace(" eps", "").astype(int)
+
+2).Make a new column for time stamp
+
+def extract_timeStamp(title):
+    data = ""
+    for i in range(len(title)):
+        if title[i] == ")":
+            for j in range(i + 1, i + 20):
+                data = data + title[j]
+            return data
+
+anime["TimeStamp"] = anime["Title"].apply(extract_timeStamp)
+
+3). Which anime has the highest score
+
+anime[anime["Score"] == anime["Score"].max()]
+
+4). Give me top 5 highest scoring anime
+
+anime.sort_values(by = "Score", ascending = False).head(5)
+
+5). Which anime has the highest episode count
+
+anime[anime["Episodes"] == anime["Episodes"].max()]
+
+6).Animes with top 5 episode count
+
+anime.sort_values(by = "Episodes", ascending = True).head(5)
